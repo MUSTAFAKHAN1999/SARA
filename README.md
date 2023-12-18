@@ -18,6 +18,6 @@ git clone -b SARA-CLI https://github.com/MUSTAFAKHAN1999/SARA.git
 
 In the Config.py file, update your OpenAI API Key
 
-Finallt, run CLI tool
+Finally, run CLI tool
 
 python3 SARA.py
