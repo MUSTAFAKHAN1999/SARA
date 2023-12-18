@@ -12,8 +12,7 @@ def create_agent(print_thinking=False):
     try:
         # LLM
         llm = ChatOpenAI(model_name=Config.GPT_MODEL, temperature=0,
-                         openai_api_key=Config.OPENAI_API_KEY,
-                         # tiktoken_model_name="gpt-3.5-turbo-16k"
+                         openai_api_key=Config.OPENAI_API_KEY
                          )
 
         # Prompt
