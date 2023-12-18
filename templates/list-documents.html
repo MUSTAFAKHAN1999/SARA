@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>List Documents</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+	<style>
+		.navbar {
+			postion: fixed;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+			width: 100%;
+			top: 0;
+			left: 0;
+			/* Added a width of 100% */
+			margin: 0;
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		/* Adding margin-bottom to create space between paragraphs */
+		p {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+	<!-- Added a smaller padding-top -->
+	<div class="container-fluid">
+		<!-- Changed the container class to container-fluid -->
+		<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+		<!-- Drop down menu -->
+		<div class="dropdown">
+			<button class="btn btn-primary dropbtn">Menu</button>
+			<div class="dropdown-content">
+				<a href="/list_collections">List Collections </a>
+				<a href="/delete_collection">Delete Collections</a>
+				<a href="/collections">Collections</a>
+				<a href="/chat">Chat</a>
+				<a href="/upload">Upload</a>
+				<a href="/list_documents">List Documents</a>
+			</div>
+		</div>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/logout">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<p> .<br>.
+</p>
+
+
+<body class="bg-light">
+
+	<div class="container mt-5">
+		<h1 class="mb-4">List Documents</h1>
+
+		<form id="listDocumentsForm">
+			<div class="form-group">
+				<label for="selectCollection">Select Collection:</label>
+				<select class="form-control" id="selectCollection" name="selected_collection">
+					{% for collection in collections %}
+					<option value="{{ collection }}">{{ collection }}</option>
+					{% endfor %}
+				</select>
+			</div>
+
+			<button type="button" class="btn btn-primary" id="submitListDocuments">Submit</button>
+		</form>
+
+		<div id="documentsList" class="mt-4"></div>
+	</div>
+
+	<!-- Bootstrap and jQuery JS -->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			// Attach an event listener to the submit button
+			$("#submitListDocuments").on("click", function () {
+				var selectedCollection = $("#selectCollection").val();
+
+				// Perform an AJAX request to retrieve documents for the selected collection
+				$.ajax({
+					url: '/list_documents',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({selected_collection: selectedCollection}),
+					success: function (response) {
+						// Display the documents in the documentsList div
+						if (response.documents.length > 0) {
+							var documentsHtml = "<strong>Documents in " + selectedCollection + ":</strong><br>";
+							$.each(response.documents, function (index, document) {
+								documentsHtml += (index + 1) + ". " + document + "<br>";
+							});
+							$("#documentsList").html(documentsHtml);
+						} else {
+							$("#documentsList").html("<strong>No documents in " + selectedCollection + ".</strong>");
+						}
+					},
+					error: function (error) {
+						console.error(error);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>

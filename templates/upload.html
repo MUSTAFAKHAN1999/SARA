@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #upload-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #upload-button {
+            margin-right: 10px;
+        }
+
+        #spinner {
+            display: none;
+        }
+
+		.navbar {
+			postion: fixed;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+			width: 100%;
+			top: 0;
+			left: 0;
+			/* Added a width of 100% */
+			margin: 0;
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		p {
+			margin-bottom: 20px;
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+    </style>
+</head>
+<body>
+
+<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+		<!-- Added a smaller padding-top -->
+		<div class="container-fluid">
+			<!-- Changed the container class to container-fluid -->
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<p> . .<br>This is another line of text.</p>
+<div class="container mt-5">
+    <h2>File Upload</h2>
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="collection">Select Collection:</label>
+            <select class="form-control" id="collection" name="collection" required>
+                <option value="" disabled selected>Select a Collection</option>
+                {% for collection in collections %}
+                    <option value="{{ collection }}">{{ collection }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="files">Select Files (.pptx or .pdf, Max 100MB):</label>
+            <input type="file" class="form-control-file" id="files" name="files[]" accept=".pptx, .pdf" multiple required>
+        </div>
+
+        <div id="file-names-preview"></div>
+
+        <div id="upload-container">
+            <button type="submit" id="upload-button" class="btn btn-primary" disabled>
+                Upload
+            </button>
+            <span id="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        </div>
+        <p id="upload-warning" style="color: red; margin-top: 10px;"></p>
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function () {
+            // Show spinner and disable the button when the form is submitted
+            document.getElementById('spinner').style.display = 'inline-block';
+            document.getElementById('upload-button').disabled = true;
+            document.getElementById('upload-warning').innerText = "Upload in progress. Do not refresh the page.";
+        });
+
+        document.getElementById('files').addEventListener('change', function (event) {
+            const fileNamesPreview = document.getElementById('file-names-preview');
+            fileNamesPreview.innerHTML = '';
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const fileName = files[i].name;
+                const fileNameElement = document.createElement('p');
+                fileNameElement.textContent = fileName;
+                fileNamesPreview.appendChild(fileNameElement);
+            }
+
+            // Enable or disable the upload button based on the selected collection
+            const collectionSelect = document.getElementById('collection');
+            const uploadButton = document.getElementById('upload-button');
+
+            if (collectionSelect.value === "") {
+                uploadButton.disabled = true;
+            } else {
+                uploadButton.disabled = false;
+            }
+        });
+
+        // Disable the upload button on page load if placeholder is selected
+        window.addEventListener('DOMContentLoaded', function () {
+            const collectionSelect = document.getElementById('collection');
+            const uploadButton = document.getElementById('upload-button');
+
+            if (collectionSelect.value === "") {
+                uploadButton.disabled = true;
+            }
+        });
+    </script>
+</div>
+
+</body>
+</html>

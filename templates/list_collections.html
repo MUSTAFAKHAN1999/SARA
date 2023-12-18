@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Collection</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* Apply a basic style reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Style for the container */
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for the label */
+label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Style for the button */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style for the display area */
+#collectionsDisplay {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#collectionName {
+			margin-top: 40px;
+			/* Change this value to your desired distance */
+		}
+
+		/* Custom styles for nav bar */
+		.navbar {
+			postion: fixed;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+			width: 100%;
+			top: 0;
+			left: 0;
+			/* Added a width of 100% */
+			margin: 0;
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+</style>
+</head>
+<body>
+
+<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+		<!-- Added a smaller padding-top -->
+		<div class="container-fluid">
+			<!-- Changed the container class to container-fluid -->
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+    <div class = "container">
+        <label for="collectionName"></label>
+        <button id = "collectionName" onclick="fetchCollection()">click here to see the  collections</button>
+        <div id="collectionsDisplay"></div>
+    </div>
+
+    <script>
+      var username = '';
+      var collectionString = '';
+      function fetchCollection() {
+        var data = {
+            "username" : username
+        }
+        const url = '/list_collections'
+        fetch(url , {
+            method: 'POST',
+            headers: {
+                'Content-type' : 'application/json'
+            },
+            body : JSON.stringify(data)
+        }).then(response => {
+            if(!response.ok){
+                throw new error('response was not OK');
+            }
+            return response.json();
+        }).then(collection => {
+            if(collection.collections != undefined){
+            var collections = collection.collections;
+            if(collection.collections.length == 0){
+                window.alert("No collections found for the user");
+            }
+            else{
+	    collections.reverse();
+            collectionString = collections.join(', ');
+            document.getElementById("collectionsDisplay").innerHTML = collectionString;
+            }
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+      }
+
+      window.onload = function() {
+        var apiurl = '/user_info';
+        debugger;
+        //var authtoken = sessionStorage.getItem();
+        fetch(apiurl ,{
+            method: 'GET',
+            headers: {
+                    'Content-Type': 'application/json'
+                },
+        }).then(response => {
+            if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(response => {
+                 username = response.name;
+                //store the username 
+            }).catch(error => {
+                console.log(error);
+            });
+    }
+    </script>
+</body>

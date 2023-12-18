@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Smart AI Retriever Assistant (SARA)</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+			background-color: #f0f0f0;
+			font-family: Arial, sans-serif;
+		}
+
+		h1 {
+			font-size: 50px;
+			margin-bottom: 50px;
+			transition: font-size 0.3s ease;
+		}
+
+		h1:hover {
+			font-size: 20px;
+		}
+
+		#buttons {
+			display: flex;
+			justify-content: center;
+		}
+
+		button {
+			font-size: 30px;
+			padding: 20px 40px;
+			margin: 20px;
+			cursor: pointer;
+			border: none;
+			color: white;
+		}
+
+		button:hover {
+			filter: brightness(110%);
+			transform: scale(0.85);
+		}
+
+		#chat {
+			background-color: #f44336;
+		}
+
+		#chat:hover {
+			background-color: #FF6600;
+		}
+
+		#collection {
+			background-color: #4CAF50;
+		}
+
+		#collection:hover {
+			background-color: #A020F0;
+		}
+
+		#upload {
+			background-color: #008CBA;
+		}
+
+		#upload:hover {
+			background-color: #FFFF00;
+		}
+
+		#logout {
+			background-color: red;
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 16px;
+			/* Adjust the font size */
+			padding: 5px 10px;
+			/* Adjust the padding */
+		}
+
+		#welcome-message {
+			font-size: 24px;
+			margin-top: 20px;
+			font-weight: bold;
+		}
+
+		/* Custom styles for nav bar */
+		.navbar {
+			postion: fixed;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+			width: 100%;
+			top: 0;
+			left: 0;
+			/* Added a width of 100% */
+			margin: 0;
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+		<!-- Added a smaller padding-top -->
+		<div class="container-fluid">
+			<!-- Changed the container class to container-fluid -->
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<h1 title="Smart AI Retrieval Assistant">Smart AI Retrieval Assistant (SARA)</h1>
+	<div id="welcome-message">
+		<h2>Hello User: {{ username }}</h2>
+	</div>
+
+	<div id="buttons">
+		<button id="chat" onclick="window.location.href='/chat'">Chat</button>
+		<button id="collection" onclick="window.location.href='/collections'">Collections</button>
+		<button id="upload" onclick="window.location.href='/upload'">Upload</button>
+	</div>
+	<button id="logout" onclick="window.location.href='/logout'">LogOut</button>
+
+
+
+</body>
+
+</html>

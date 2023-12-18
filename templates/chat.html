@@ -1,0 +1,185 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chatbot</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='sidebar-style.css')}}"/>
+	</head>
+	
+	
+	<body>
+		
+		<!-- Sidebar-->
+		<div id="sidebar" class="text-light text-center">
+			<form class="sidebar-form">
+				<div class="form-group">
+					<label for="select-collection">Select Collection:</label>
+					<select class="form-select" id="select-collection"></select> <br><br>
+					<button id="submitSidebar" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+		
+
+		<!-- Chatbot Interface -->
+		<div class="container-fluid h-100">
+			<div class="row justify-content-center h-100">		
+				<div class="col-md-8 col-xl-6 chat">
+					<div class="card">
+						<div class="card-header msg_head">
+							<div class="d-flex bd-highlight">
+								<div class="img_cont">
+									<img src="https://cdn1.iconfinder.com/data/icons/internet-marketing-4-1/32/__bot_chatbot_artificial_robot-512.png" class="rounded-circle user_img">
+									<span class="online_icon"></span>
+								</div>
+								<div class="user_info">
+									<span>SARA</span>
+									<p>Ask me anything from your Documents!</p>
+									<p id="selectedCollectionHeader"></p>
+								</div>
+							</div>
+						</div>
+						<div id="messageFormeight" class="card-body msg_card_body">
+							
+							
+						</div>
+						<div class="card-footer">
+							<form id="messageArea" class="input-group">
+                                <input type="text" id="text" name="msg" placeholder="Type your question..." autocomplete="off" class="form-control type_msg" required/>
+								<div class="input-group-append">
+									<button type="submit" id="send" class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script>
+			$(document).ready(function () {
+				// Initially hide the chatbot interface and disable the button
+				$(".chat").hide();
+				$("#submitSidebar").prop("disabled", true);
+		
+				// Variable to store the selected collection
+				var selectedCollection = '';
+		
+				// Function to show the chatbot interface
+				function showChatbotInterface() {
+					$(".chat").show();
+				}
+		
+				// Function to clear the chat window
+				function clearChatWindow() {
+					$("#messageFormeight").empty();
+				}
+		
+				// Fetch collection names on page load
+				$.ajax({
+					url: '/chat_collections',
+					type: 'POST',
+					success: function(response) {
+						populateDropdown(response.collections);
+					}
+				});
+		
+				// Function to populate the select dropdown
+				function populateDropdown(collectionNames) {
+					var selectCollection = $('#select-collection');
+					selectCollection.empty();
+		
+					// Add a placeholder option
+					selectCollection.append('<option value="" disabled selected>Select Collection</option>');
+		
+					if (collectionNames.length === 0) {
+						selectCollection.append('<option value="" disabled>No collection in DB</option>');
+					} else {
+						$.each(collectionNames, function(index, value) {
+							selectCollection.append('<option value="' + value + '">' + value + '</option>');
+						});
+		
+						// Enable the button when a dropdown value is selected
+						selectCollection.on('change', function() {
+							selectedCollection = $(this).val();
+							$("#submitSidebar").prop("disabled", false);
+		
+							// Update the top right collection display
+							$("#collectionDisplayTopRight").text("Collection: " + selectedCollection);
+						});
+					}
+				}
+		
+				// Event listener for the submit button in the sidebar
+				$("#submitSidebar").on("click", function(event) {
+					// Prevent the default form submission behavior
+					event.preventDefault();
+		
+					// Clear the chat window when the collection changes and submit button is pressed
+					clearChatWindow();
+		
+					// Trigger the function to show the chatbot interface
+					showChatbotInterface();
+				});
+		
+				// Message area form submission
+				$("#messageArea").on("submit", function (event) {
+					// Prevent the default form submission behavior
+					event.preventDefault();
+		
+					const date = new Date();
+					const hour = date.getHours();
+					const minute = date.getMinutes();
+					const str_time = hour + ":" + minute;
+					var rawText = $("#text").val();
+		
+					var userHtml = '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' + rawText + '<span class="msg_time_send">' + str_time + '</span></div><div class="img_cont_msg"><img src="https://i.ibb.co/d5b84Xw/Untitled-design.png" class="rounded-circle user_img_msg"></div></div>';
+		
+					$("#text").val("");
+					$("#messageFormeight").append(userHtml);
+					scrollToBottom();
+		
+					$.ajax({
+						data: {
+							msg: rawText,
+							collection: selectedCollection
+						},
+						type: "POST",
+						url: "/chat",
+						success: function (data) {
+							var botHtml = '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="https://cdn1.iconfinder.com/data/icons/internet-marketing-4-1/32/__bot_chatbot_artificial_robot-512.png" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' + data.msg + '<span class="msg_time">' + str_time + '</span></div></div>';
+							$("#messageFormeight").append($.parseHTML(botHtml));
+							scrollToBottom();
+						}
+					});
+				});
+		
+				// Function to scroll to the bottom
+				function scrollToBottom() {
+					var messageFormeight = $("#messageFormeight");
+					messageFormeight.scrollTop(messageFormeight[0].scrollHeight);
+				}
+			});
+		</script>
+		
+		
+		
+		
+
+
+
+
+
+
+
+		
+        
+    </body>
+</html>

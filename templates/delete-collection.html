@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Delete Collection</title>
+	<!-- Add Bootstrap CSS link -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet"
+		id="bootstrap-css">
+	<style>
+		body {
+			margin: 0 auto;
+		}
+
+		.container {
+			width: 50%;
+			margin: 0 auto;
+			text-align: center;
+			padding: 20px;
+			border: 2px solid #ccc;
+			border-radius: 8px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+
+		input {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			cursor: pointer;
+			border: none;
+			border-radius: 5px;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		/* Custom styles for nav bar */
+		.navbar {
+			postion: fixed;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+			width: 100%;
+			top: 0;
+			left: 0;
+			/* Added a width of 100% */
+			margin: 0;
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		/* Adding margin-bottom to create space between paragraphs */
+		p {
+			margin-bottom: 20px;
+		}
+
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+		<!-- Added a smaller padding-top -->
+		<div class="container-fluid">
+			<!-- Changed the container class to container-fluid -->
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<p>This is a line of text.<br>This is another line of text.</p>
+
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header bg-danger text-white">
+						<h2 class="mb-0">Delete Collection</h2>
+					</div>
+					<div class="card-body">
+						<form id="deleteCollectionForm">
+							<div class="form-group">
+								<label for="selectCollection">Select Collection:</label>
+								<select class="form-control" id="selectCollection" required>
+									<!-- Populate dropdown options dynamically using Flask and Jinja -->
+									{% for collection in collections %}
+									<option value="{{ collection }}">{{ collection }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<button type="button" class="btn btn-danger" id="deleteCollectionBtn">Delete Collection</button>
+						</form>
+
+						<!-- Display the response message -->
+						<div id="responseMessage" class="mt-3"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Add Bootstrap and other scripts at the end of the body -->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			// Handle delete collection button click
+			$("#deleteCollectionBtn").on("click", function () {
+				var selectedCollection = $("#selectCollection").val();
+
+				// Make AJAX request to delete the collection
+				$.ajax({
+					url: '/delete_collection',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({'selected_collection': selectedCollection}),
+					success: function (response) {
+						// Display the response message
+						$("#responseMessage").text(response.message);
+
+						// Redirect to /collections after a short delay (adjust as needed)
+						setTimeout(function () {
+							window.location.href = '/collections';
+						}, 2000);  // Redirect after 2 seconds (adjust as needed)
+					},
+					error: function (error) {
+						// Display the error message
+						$("#responseMessage").text('Error: ' + error.responseJSON.error);
+					}
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>
+"

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Smart AI Retriever Assistant (SARA)</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* Custom styles for primary button */
+		.btn-primary {
+			background-color: #98FF98;
+			/* Mint Green */
+			border-color: #98FF98;
+			color: #fff;
+		}
+
+		/* Custom styles for info button */
+		.btn-info {
+			background-color: #E6E6FA;
+			/* Lavender */
+			border-color: #E6E6FA;
+			color: #000;
+			/* Adjusted text color for better visibility on lavender */
+		}
+
+		/* Custom styles for success button */
+		.btn-success {
+			background-color: #FFDAB9;
+			/* Peach */
+			border-color: #FFDAB9;
+			color: #000;
+			/* Adjusted text color for better visibility on peach */
+		}
+
+		/* Custom styles for warning button */
+		.btn-warning {
+			background-color: #708090;
+			/* Slate */
+			border-color: #708090;
+			color: #fff;
+		}
+
+
+		/* Additional styles */
+		body {
+			padding-top: 80px;
+			font-family: Arial, sans-serif;
+		}
+
+		.header {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		.button-section {
+			text-align: center;
+			margin-top: 80px;
+		}
+
+		.button-section button {
+			margin: 30px;
+		}
+
+		/* Custom styles for nav bar */
+		.navbar {
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<!-- Header -->
+		<h1 class="header">Smart AI Retriever Assistant (SARA)</h1>
+		<!-- Chat, Upload, Collections Buttons -->
+		<div class="button-section">
+			<a href="/list_collections" class="btn btn-info">List Collections</a>
+			<a href="/create_collection" class="btn btn-success">Create Collection</a>
+			<a href="/delete_collection" class="btn btn-warning">Delete Collection</a>
+			<a href="/list_documents" class="btn btn-info">See Documents in Collection</a>
+		</div>
+	</div>
+
+</body>
+
+</html>

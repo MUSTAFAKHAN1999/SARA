@@ -1,0 +1,16 @@
+[Unit]
+Description=Not Quite Trivial Web Server
+After=syslog.target network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/Zuhaib/webserver
+ExecStart=/home/ubuntu/Zuhaib/webserver/startflask.sh
+SyslogIdentifier=WebServer
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target
+ 
+

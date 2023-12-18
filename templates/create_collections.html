@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Create Collection</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		body {
+			margin: 0 auto;
+		}
+
+		.container {
+			width: 50%;
+			margin: 100px auto;
+			text-align: center;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 10px;
+		}
+
+		input {
+			width: 100%;
+			padding: 8px;
+			margin-bottom: 10px;
+			box-sizing: border-box;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			cursor: pointer;
+			border: none;
+			border-radius: 5px;
+		}
+
+		button:hover {
+			background-color: #45a049;
+		}
+
+		/* Custom styles for nav bar */
+		.navbar {
+
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			border-bottom: 1px solid #C0C0C0;
+			/* Silver */
+
+			/* Added a width of 100% */
+
+			/* Added a smaller margin */
+		}
+
+		.navbar-brand {
+			color: #000;
+			/* Black */
+		}
+
+		.nav-link {
+			color: #000;
+			/* Black */
+		}
+
+		/* Custom styles for drop down menu */
+		.dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			background-color: #F0F8FF;
+			/* Alice Blue */
+			min-width: 160px;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+			z-index: 1;
+		}
+
+		.dropdown-content a {
+			color: #000;
+			/* Black */
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+		}
+
+		.dropdown-content a:hover {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+
+		.dropdown:hover .dropdown-content {
+			display: block;
+		}
+
+		.dropdown:hover .dropbtn {
+			background-color: #E6E6FA;
+			/* Lavender */
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Nav bar -->
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="padding-top: 10px;">
+		<!-- Added a smaller padding-top -->
+		<div class="container-fluid">
+			<!-- Changed the container class to container-fluid -->
+			<a class="navbar-brand" href="/">Smart AI Retriever Assistant (SARA)</a>
+			<!-- Drop down menu -->
+			<div class="dropdown">
+				<button class="btn btn-primary dropbtn">Menu</button>
+				<div class="dropdown-content">
+					<a href="/list_collections">List Collections </a>
+					<a href="/delete_collection">Delete Collections</a>
+					<a href="/collections">Collections</a>
+					<a href="/chat">Chat</a>
+					<a href="/upload">Upload</a>
+					<a href="/list_documents">List Documents</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout">Logout</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<label for="collectionName">Enter Collection Name:</label>
+		<input required type="text" id="collectionName" name="collectionName" placeholder="Type collection name here">
+		<button onclick="createCollection()">Submit</button>
+	</div>
+	<script>
+		var username = '';
+		function createCollection() {
+			debugger;
+			var collectionName = document.getElementById('collectionName').value;
+			if (collectionName.trim() === '') {
+				window.alert("Collection name is required")
+			}
+			console.log('collectionName');
+			const url = '/create_collection';
+			var data = {
+				"collectionname": collectionName,
+				"username": username
+			}
+			fetch(url, {
+				method: "POST",
+				headers: {
+					'Content-type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => {
+					debugger;
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log('API Response:', data);
+					// Process the API response as needed
+					window.alert("succesfully created the collection");
+					document.getElementById('collectionName').value = '';
+				})
+				.catch(error => {
+					console.error('Error during API call:', error);
+					// Handle errors
+				});
+		}
+
+		window.onload = function () {
+			var apiurl = '/user_info';
+			debugger;
+			//var authtoken = sessionStorage.getItem();
+			fetch(apiurl, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+			}).then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			}).then(response => {
+				username = response.name;
+				//store the username 
+			}).catch(error => {
+				console.log(error);
+			});
+		}
+	</script>
+</body>
+
+</html>
