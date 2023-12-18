@@ -21,7 +21,7 @@ import Config
 app = Flask(__name__)
 
 # Define the absolute path for storing uploaded files
-UPLOAD_FOLDER = '/var/www/sara/webserver/tempdocs'
+UPLOAD_FOLDER = './tempdocs'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Ensure the UPLOAD_FOLDER exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
