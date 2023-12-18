@@ -6,8 +6,8 @@ import Config
 client = Config.client
 
 openai_ef = embedding_functions.OpenAIEmbeddingFunction(
-    api_key="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",
-    model_name="text-embedding-ada-002"
+    api_key=Config.OPENAI_API_KEY,
+    model_name=Config.EMBEDDING_MODEL
 )
 
 
